@@ -1,15 +1,14 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
-import { View, Text } from 'react-native';
+import { StackNavigator } from './src/router/StackNavigator';
+
 
 const App = () => {
 
 
   return (
     <NavigationContainer>
-      <View>
-        <Text>Productos</Text>
-      </View>
+      <StackNavigator />
     </NavigationContainer>
   );
 }
