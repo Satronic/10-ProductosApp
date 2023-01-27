@@ -4,7 +4,8 @@ export const loginstyles = StyleSheet.create({
     containerForm: {
         flex: 1,
         // alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        height: 600
     },
     title: {
         color: 'yellow',
