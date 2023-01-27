@@ -6,16 +6,16 @@ import { loginstyles } from '../theme/themes';
 import { useForm } from '../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
 
-interface LoginScreenProps extends StackScreenProps<any, any> { }
+interface RegisterScreenProps extends StackScreenProps<any, any> { }
 
-export const LoginScreen = ({ navigation }: LoginScreenProps) => {
+export const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
 
     const { email, password, onChange } = useForm({
         email: '',
         password: ''
     });
 
-    const onLogin = () => {
+    const onRegister = () => {
         console.log(email, password);
         Keyboard.dismiss();
     };
@@ -30,7 +30,9 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
             >
                 <View style={loginstyles.containerForm}>
                     <Logo />
-                    <Text style={loginstyles.title}>iniciar sesión</Text>
+                    <Text style={loginstyles.title}>Crear Cuenta</Text>
+
+
                     <Text style={loginstyles.label}>E-mail</Text>
                     <TextInput
                         style={loginstyles.input}
@@ -42,8 +44,20 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
                         onChangeText={(value) => onChange(value, 'email')}
                         value={email}
                     />
-                    <Text style={loginstyles.label}>Password</Text>
 
+                    <Text style={loginstyles.label}>Name</Text>
+                    <TextInput
+                        style={loginstyles.input}
+                        placeholder='Ingrese su nombre'
+                        placeholderTextColor='#ccc'
+                        keyboardType="ascii-capable"
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        onChangeText={(value) => onChange(value, 'email')}
+                        value={email}
+                    />
+
+                    <Text style={loginstyles.label}>Password</Text>
                     <TextInput
                         style={loginstyles.input}
                         placeholder='Ingrese su contraseña'
@@ -60,7 +74,7 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
                     <View style={loginstyles.buttonContainer}>
                         <TouchableOpacity
                             style={loginstyles.button}
-                            onPress={onLogin}
+                            onPress={onRegister}
                         >
                             <Text style={loginstyles.buttonText}>Aceptar</Text>
                         </TouchableOpacity>
@@ -69,9 +83,9 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
                     <View style={loginstyles.buttonContainer}>
                         <TouchableOpacity
                             style={loginstyles.crearCuenta}
-                            onPress={() => navigation.replace('RegisterScreen')} //
+                            onPress={() => navigation.replace('LoginScreen')}
                         >
-                            <Text style={loginstyles.buttonText}>Crear Cuenta</Text>
+                            <Text style={loginstyles.buttonText}>Login</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -79,4 +93,3 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
         </>
     )
 }
-

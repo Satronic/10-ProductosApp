@@ -44,5 +44,9 @@ export const loginstyles = StyleSheet.create({
     buttonText: {
         color: 'yellow',
         fontSize: 18
+    },
+
+    crearCuenta: {
+        
     }
 })
