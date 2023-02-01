@@ -1,14 +1,14 @@
 import { Usuario } from "../interfaces/appInterfaces";
 
 export interface AuthState {
-    status: 'ckecking' | 'authenticate' | 'not-authenticate';
+    status: 'checking' | 'authenticated' | 'not-authenticated';
     token: string | null;
     errorMessage: string;
     user: Usuario | null;
 }
 
 type AuthAction =
-    | { type: 'signIn', payload: { token: string, user: Usuario } }
+    | { type: 'signUp', payload: { token: string, user: Usuario } }
     | { type: 'addError', payload: string }
     | { type: 'removeError' }
     | { type: 'notAuthenticated' }
@@ -20,7 +20,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
             return {
                 ...state,
                 user: null,
-                status: 'not-authenticate',
+                status: 'not-authenticated',
                 token: null,
                 errorMessage: action.payload
             }
@@ -31,11 +31,11 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
                 errorMessage: ''
             }
 
-        case 'signIn':
+        case 'signUp':
             return {
                 ...state,
                 errorMessage: '',
-                status: 'authenticate',
+                status: 'authenticated',
                 token: action.payload.token,
                 user: action.payload.user
             }
@@ -44,7 +44,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
         case 'notAuthenticated':
             return {
                 ...state,
-                status: 'not-authenticate',
+                status: 'not-authenticated',
                 token: null,
                 user: null
             }

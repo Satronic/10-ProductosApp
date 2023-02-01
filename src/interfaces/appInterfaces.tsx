@@ -6,8 +6,8 @@ export interface LoginData {
 }
 
 export interface LoginResponse {
-    total:    number;
-    usuarios: Usuario[];
+    usuario: Usuario;
+    token:   string;
 }
 
 export interface Usuario {

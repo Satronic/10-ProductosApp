@@ -15,7 +15,7 @@ type AuthContextProps = {
 };
 
 const authInitialState: AuthState = {
-    status: 'ckecking',
+    status: 'checking',
     token: null,
     user: null,
     errorMessage: ''
@@ -30,23 +30,59 @@ export const AuthProvider = ({ children }: any) => {
     const signUp = () => {
 
     };
+
     const signIn = async ({ correo, password }: LoginData) => {
+        
         try {
-            const response = await cafeAPI.post<LoginResponse>('auth/login', {
+            const response = await cafeAPI.post<LoginResponse>('/auth/login', {
                 correo,
                 password
             });
 
-            console.log(response.data)
-        } catch (error) {
-            console.log(error.response.data)
+            // console.log('Response in signIn', response);
+            // console.log('Response in signIn', correo, password);
+
+            dispatch({
+                type: 'signUp', 
+                payload: {
+                    token: response.data.token,
+                    user: response.data.usuario
+                }
+            })
+
+        } catch (error: any) {
+    
+            if (error.response) {
+                // La respuesta fue hecha y el servidor respondió con un código de estado
+                // que esta fuera del rango de 2xx
+                console.log('error.response.data: ', JSON.stringify(error.response.data, null, 4));
+                console.log('error.response.status: ', JSON.stringify(error.response.status, null, 4));
+                console.log('error.response.headers: ', JSON.stringify(error.response.headers, null, 4));
+
+                dispatch({
+                    type: 'addError',
+                    payload: error.response.data.msg || 'Información incorrecta'
+                })
+
+            } else if (error.request) {
+                // La petición fue hecha pero no se recibió respuesta
+                // `error.request` es una instancia de XMLHttpRequest en el navegador y una instancia de
+                // http.ClientRequest en node.js
+                console.log('error.response.headers: ', JSON.stringify(error.request, null, 4));
+            } else {
+                // Algo paso al preparar la petición que lanzo un Error
+                console.log('Error.message', JSON.stringify(error.message, null, 4));
+            }
+            console.log('Error Config', JSON.stringify(error.config, null, 4));
         }
     };
+
     const logOut = () => {
 
     };
-    const removeError = () => {
 
+    const removeError = () => {
+        dispatch({ type: 'removeError' })
     };
 
     return (
