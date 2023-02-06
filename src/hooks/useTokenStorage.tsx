@@ -41,8 +41,13 @@ export default function useTokenStorage() {
         AsyncStorage.setItem('token', token);
     };
 
+    const clearTokenInStorage = async () => {
+        await AsyncStorage.removeItem('token');
+    }
+
     return {
         readTokenFromStorage,
-        writeTokenToStorage
+        writeTokenToStorage,
+        clearTokenInStorage
     }
 };

@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: any) => {
 
     const [state, dispatch] = useReducer(authReducer, authInitialState);
     // const { tokenStorage, writeTokenToStorage } = useTokenStorage();
-    const { readTokenFromStorage, writeTokenToStorage } = useTokenStorage();
+    const { readTokenFromStorage, writeTokenToStorage, clearTokenInStorage } = useTokenStorage();
 
     useEffect(() => {
         // const token = readTokenFromStorage();
@@ -108,7 +108,10 @@ export const AuthProvider = ({ children }: any) => {
     };
 
     const logOut = () => {
-
+        clearTokenInStorage();
+        dispatch({
+            type: 'logOut'
+        });
     };
 
     const removeError = () => {
