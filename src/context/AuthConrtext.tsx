@@ -1,7 +1,9 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useReducer, useEffect } from 'react';
 import cafeAPI from '../api/cafeAPI';
 import { LoginData, LoginResponse, Usuario } from '../interfaces/appInterfaces';
 import { authReducer, AuthState } from './authReducer';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import useTokenStorage from '../hooks/useTokenStorage';
 
 type AuthContextProps = {
     errorMessage: string;
@@ -26,32 +28,60 @@ export const AuthContext = createContext({} as AuthContextProps);
 export const AuthProvider = ({ children }: any) => {
 
     const [state, dispatch] = useReducer(authReducer, authInitialState);
+    // const { tokenStorage, writeTokenToStorage } = useTokenStorage();
+    const { readTokenFromStorage, writeTokenToStorage } = useTokenStorage();
+
+    useEffect(() => {
+        // const token = readTokenFromStorage();
+        checkToken();
+    }, []);
+
+    const checkToken = async () => {
+        try {
+            if (readTokenFromStorage() === null) return dispatch({ type: 'notAuthenticated' });
+            // console.log('Token in AuthContext: ', tokenStorage);
+            const response = await cafeAPI.get('/auth');
+
+            if (response.status !== 200) return dispatch({ type: 'notAuthenticated' });
+
+            return dispatch({
+                type: 'signUp',
+                payload: {
+                    token: response.data.token,
+                    user: response.data.usuario
+                }
+            });
+        } catch (error) {
+            console.log('Error in checkToken', error);
+        }
+
+
+    }
 
     const signUp = () => {
 
     };
 
     const signIn = async ({ correo, password }: LoginData) => {
-        
+
         try {
             const response = await cafeAPI.post<LoginResponse>('/auth/login', {
                 correo,
                 password
             });
 
-            // console.log('Response in signIn', response);
-            // console.log('Response in signIn', correo, password);
-
             dispatch({
-                type: 'signUp', 
+                type: 'signUp',
                 payload: {
                     token: response.data.token,
                     user: response.data.usuario
                 }
-            })
+            });
+
+            writeTokenToStorage(response.data.token);
 
         } catch (error: any) {
-    
+
             if (error.response) {
                 // La respuesta fue hecha y el servidor respondió con un código de estado
                 // que esta fuera del rango de 2xx
