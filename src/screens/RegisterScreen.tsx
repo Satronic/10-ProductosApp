@@ -1,23 +1,53 @@
-import React from 'react'
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, Alert } from 'react-native';
 import { Background } from '../components/Background';
 import { Logo } from '../components/Logo';
 import { loginstyles } from '../theme/themes';
 import { useForm } from '../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthConrtext';
 
 interface RegisterScreenProps extends StackScreenProps<any, any> { }
 
 export const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
 
-    const { email, password, onChange } = useForm({
-        email: '',
-        password: ''
+    const { user, signUp, errorMessage, removeError } = useContext(AuthContext);
+    // const [ registeredUser, setRegisteredUser ] = useState('');
+
+    const { correo, password, nombre, onChange } = useForm({
+        correo: '',
+        password: '',
+        nombre: ''
     });
 
+    useEffect(() => {
+        if (correo === user?.correo) {
+            Alert.alert('Crear Cuenta ', 'Usuario registrado con exito', [
+                {
+                    text: 'OK',
+                    // onPress: () => navigation.replace('ProtectedScreen')
+                    onPress: () => null
+                }
+            ]);
+        }
+    }, [user?.correo]);
+
+    useEffect(() => {
+        if (errorMessage === '') return;
+        Alert.alert('Error de Registro', errorMessage, [
+            {
+                text: 'OK',
+                onPress: () => removeError()
+            }
+        ]);
+
+    }, [errorMessage]);
+
     const onRegister = () => {
-        console.log(email, password);
+        console.log(correo, password);
         Keyboard.dismiss();
+        signUp({ nombre, correo, password });
     };
 
     return (
@@ -32,6 +62,17 @@ export const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
                     <Logo />
                     <Text style={loginstyles.title}>Crear Cuenta</Text>
 
+                    <Text style={loginstyles.label}>Name</Text>
+                    <TextInput
+                        style={loginstyles.input}
+                        placeholder='Ingrese su nombre'
+                        placeholderTextColor='#ccc'
+                        keyboardType="ascii-capable"
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        onChangeText={(value) => onChange(value, 'nombre')}
+                        value={nombre}
+                    />
 
                     <Text style={loginstyles.label}>E-mail</Text>
                     <TextInput
@@ -41,20 +82,8 @@ export const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
                         keyboardType="email-address"
                         autoCapitalize='none'
                         autoCorrect={false}
-                        onChangeText={(value) => onChange(value, 'email')}
-                        value={email}
-                    />
-
-                    <Text style={loginstyles.label}>Name</Text>
-                    <TextInput
-                        style={loginstyles.input}
-                        placeholder='Ingrese su nombre'
-                        placeholderTextColor='#ccc'
-                        keyboardType="ascii-capable"
-                        autoCapitalize='none'
-                        autoCorrect={false}
-                        onChangeText={(value) => onChange(value, 'email')}
-                        value={email}
+                        onChangeText={(value) => onChange(value, 'correo')}
+                        value={correo}
                     />
 
                     <Text style={loginstyles.label}>Password</Text>

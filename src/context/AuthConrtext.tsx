@@ -1,6 +1,6 @@
 import { createContext, useReducer, useEffect } from 'react';
 import cafeAPI from '../api/cafeAPI';
-import { LoginData, LoginResponse, Usuario } from '../interfaces/appInterfaces';
+import { LoginData, LoginResponse, Usuario, RegisterData } from '../interfaces/appInterfaces';
 import { authReducer, AuthState } from './authReducer';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import useTokenStorage from '../hooks/useTokenStorage';
@@ -10,7 +10,7 @@ type AuthContextProps = {
     token: string | null;
     user: Usuario | null;
     status: 'checking' | 'authenticated' | 'not-authenticated';
-    signUp: () => void;
+    signUp: ({ nombre, correo, password }: RegisterData) => any;
     signIn: ({ correo, password }: LoginData) => any;
     logOut: () => void;
     removeError: () => void;
@@ -52,13 +52,56 @@ export const AuthProvider = ({ children }: any) => {
                 }
             });
         } catch (error) {
-            console.log('Error in checkToken', error);
+            dispatch({ type: 'notAuthenticated' });
+            return console.log('Error in checkToken', error);
         }
 
 
     }
 
-    const signUp = () => {
+    const signUp = async ({ nombre, correo, password }: RegisterData) => {
+
+        try {
+            const createdUser = await cafeAPI.post<LoginResponse>('/usuarios', {
+                nombre,
+                correo,
+                password
+            });
+            console.table({ nombre, correo, password });
+            dispatch({
+                type: 'signUp',
+                payload: {
+                    token: createdUser.data.token,
+                    user: createdUser.data.usuario
+                }
+            });
+
+            writeTokenToStorage(createdUser.data.token);
+
+        } catch (error: any) {
+            if (error.response) {
+                // La respuesta fue hecha y el servidor respondió con un código de estado
+                // que esta fuera del rango de 2xx
+                console.log('error.response.data: ', JSON.stringify(error.response.data, null, 4));
+                console.log('error.response.status: ', JSON.stringify(error.response.status, null, 4));
+                console.log('error.response.headers: ', JSON.stringify(error.response.headers, null, 4));
+
+                dispatch({
+                    type: 'addError',
+                    payload: error.response.data.msg || 'Información incorrecta'
+                })
+
+            } else if (error.request) {
+                // La petición fue hecha pero no se recibió respuesta
+                // `error.request` es una instancia de XMLHttpRequest en el navegador y una instancia de
+                // http.ClientRequest en node.js
+                console.log('error.response.headers: ', JSON.stringify(error.request, null, 4));
+            } else {
+                // Algo paso al preparar la petición que lanzo un Error
+                console.log('Error.message', JSON.stringify(error.message, null, 4));
+            }
+            console.log('Error Config', JSON.stringify(error.config, null, 4));
+        }
 
     };
 
