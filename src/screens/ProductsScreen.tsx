@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { ProductCard } from '../components/ProductCard';
 import { ProductsContext } from '../context/ProductsContext';
 
 export const ProductsScreen = () => {
@@ -11,7 +12,7 @@ export const ProductsScreen = () => {
             <FlatList 
                 data={products}
                 keyExtractor={(item) => item._id}
-                renderItem={({item}) => <Text style={styles.text}>{item.nombre}</Text>}
+                renderItem={({item}) => <ProductCard productName={item.nombre}/>}
             />
             {/* <Text style={styles.text}>{JSON.stringify(products, null, 5)}</Text> */}
         </View>
