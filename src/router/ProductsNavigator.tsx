@@ -16,7 +16,16 @@ const Stack = createStackNavigator<ProductsStackParams>();
 
 export const ProductsNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        cardStyle: {
+          backgroundColor: 'black'
+        },
+        headerStyle: {
+          backgroundColor: 'yellow'
+        }
+      }}
+    >
       <Stack.Screen
         name='ProductsScreen'
         component={ProductsScreen}

@@ -1,9 +1,10 @@
-import React, { createContext, useState } from "react";
-import { Producto } from '../interfaces/appInterfaces';
+import React, { createContext, useState, useEffect } from "react";
+import cafeAPI from "../api/cafeAPI";
+import { Producto, Products } from '../interfaces/appInterfaces';
 
 // 1.1. Products Props
 interface ProductsContextProps {
-    listProducts: Producto[];
+    products: Producto[];
     getProducts: () => Promise<void>;
     getProductById: (productId: string) => Promise<Producto>;
     createProduct: (categoryId: string, productName: string) => Promise<void>;
@@ -25,8 +26,14 @@ export const ProductsProvider = ({ children }: ProductsProviderProps) => {
 
     const [products, setProducts] = useState<Producto[]>([]);
 
-    const getProducts = async () => {
+    useEffect(() => {
+        getProducts();
+    }, [])
+    
 
+    const getProducts = async () => {
+        const response = await cafeAPI.get<Products>('/productos');
+        return setProducts(response.data.productos);
     };
 
     const getProductById = async (productId: string) => {
@@ -51,8 +58,7 @@ export const ProductsProvider = ({ children }: ProductsProviderProps) => {
 
     return (
         <ProductsContext.Provider value={{
-            // listProducts,
-            // listProducts,
+            products,
             getProducts,
             getProductById,
             createProduct,
