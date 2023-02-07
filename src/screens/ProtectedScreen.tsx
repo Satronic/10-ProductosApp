@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
-import { AuthContext } from '../context/AuthConrtext';
+import { AuthContext } from '../context/AuthContext';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import useTokenStorage from '../hooks/useTokenStorage';
 

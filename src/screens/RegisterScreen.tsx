@@ -6,7 +6,7 @@ import { loginstyles } from '../theme/themes';
 import { useForm } from '../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useContext } from 'react';
-import { AuthContext } from '../context/AuthConrtext';
+import { AuthContext } from '../context/AuthContext';
 
 interface RegisterScreenProps extends StackScreenProps<any, any> { }
 

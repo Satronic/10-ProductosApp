@@ -5,7 +5,7 @@ import { Logo } from '../components/Logo';
 import { loginstyles } from '../theme/themes';
 import { useForm } from '../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
-import { AuthContext } from '../context/AuthConrtext';
+import { AuthContext } from '../context/AuthContext';
 
 interface LoginScreenProps extends StackScreenProps<any, any> { }
 
